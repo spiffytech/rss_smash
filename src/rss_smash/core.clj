@@ -5,16 +5,22 @@
             [byte-streams :as bs]
             [feedparser-clj.core :as fp]))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
+(def feeds ["http://spiffy.tech/tv_torrents.rss"])
+
+(defn fetch-feed-body [url]
   (with-open [client (http/create-client)]
-  (let [body (->
-              (http/GET client "http://spiffy.tech/tv_torrents.rss")
-              (http/await)
-              (http/string)
-              (bs/to-input-stream)
-              )
-        entries (:entries (fp/parse-feed body))]
-  (pprint entries))))
-  ;(pprint (fp/parse-feed "http://spiffy.tech/tv_torrents.rss")))))
+    (->
+     (http/GET client url)
+     (http/await)
+     (http/string))))
+
+(defn -main
+  [& args]
+  (->>
+   feeds
+   (map fetch-feed-body)
+   (map bs/to-input-stream)
+   (map fp/parse-feed)
+   (map :entries)
+   (pprint)
+  ))
