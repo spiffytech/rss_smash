@@ -7,7 +7,8 @@
             [feedparser-clj.core :as fp]
             [clj-rss.core :as rss]))
 
-(def feeds ["http://spiffy.tech/tv_torrents.rss"])
+(def feeds ["http://spiffy.tech/tv_torrents.rss"
+            "http://showrss.info/rss.php?user_id=248483&hd=null&proper=null"])
 
 (defn fetch-feed-body [url]
   (with-open [client (http/create-client)]
@@ -19,14 +20,13 @@
 (defn munge-tags
   "feedparser doesn't honor zero-or-one tag restrictions. Fix tags so clj-rss will accept them."
   [item]
-  (pprint item)
-  (println)
   (let [blacklisted-keys [:contributors :contents]
         key-instructions [{:bad :categories :good :category :fn (partial into [])}
                           {:bad :authors :good :author :fn first}
                           {:bad :enclosures :good :enclosure :fn #(vector (dissoc (into {} (first %)) :uri))}
                           {:bad :published-date :good :pubDate :fn identity}
-                          {:bad :uri :good :guid :fn #(vector {:isPermaLink false} %)}]
+                          {:bad :uri :good :guid :fn #(vector {:isPermaLink false} %)}
+                          {:bad :description :good :description :fn #(:value %)}]
         key-replacements (into {}
                                (map
                                 #(vector (:bad %) (:good %))
@@ -54,9 +54,6 @@
       (reduce purge-nils {} $))))
 
 (defn mk-feed [items]
-  (println)
-  (pprint (first items))
-  (println)
   (rss/channel-xml {  ; False means no content validation. clj-rss doesn't recognize all valid tags.
                 :title "spiffytech's TV shows"
                 :description "spiffytech's TV shows"
@@ -75,7 +72,8 @@
    (mapcat :entries)
    (map (partial into {}))  ; feedparser returns structs
    (map munge-tags)
-   (sort-by :published-date)
+   (sort-by :pubDate)
+   ((fn [items] (println (count items)) items))
    (mk-feed)
    (spit "feed.xml")
   ))
