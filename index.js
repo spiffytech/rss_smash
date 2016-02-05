@@ -16,7 +16,7 @@ feeds.tv_torrents = {
     "sources" : [
         {
             "name"              : "spiffytech's feeds",
-            "feed_url"          : "http://spiffy.tech/tv_torrents.rss",
+            "feed_url"          : "http://spiffy.tech/tv_torrents.raw.rss",
         },
         {
             "name"              : "ShowRSS",
