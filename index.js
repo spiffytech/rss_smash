@@ -7,7 +7,7 @@ var feeds = {};
 feeds.tv_torrents = {
     "feed_name"             : "feed",
     "default_count"         : 50,
-    "no_cdata_fields"       : ["title"], // Don"t wrap these fields in CDATA tags
+    "no_cdata_fields"       : [], // Don"t wrap these fields in CDATA tags
     "plugins"               : ["preserve_enclosures"],
     "meta" : {
         "title": "spiffytech's combined rss feed",
@@ -20,7 +20,8 @@ feeds.tv_torrents = {
         },
         {
             "name"              : "ShowRSS",
-            "feed_url"          : "http://showrss.info/rss.php?user_id=248483&hd=null&proper=null"
+            //"feed_url"          : "http://showrss.info/rss.php?user_id=248483&hd=null&proper=null"
+            "feed_url"          : "http://showrss.info/user/25155.rss?magnets=true&namespaces=true&name=clean&quality=hd&re=yes"
         }
     ]
 };
