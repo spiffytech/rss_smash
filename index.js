@@ -7,7 +7,7 @@ var feeds = {};
 feeds.tv_torrents = {
     "feed_name"             : "feed",
     "default_count"         : 50,
-    "no_cdata_fields"       : [], // Don"t wrap these fields in CDATA tags
+    "no_cdata_fields"       : ["title"], // Don"t wrap these fields in CDATA tags
     "plugins"               : ["preserve_enclosures"],
     "meta" : {
         "title": "spiffytech's combined rss feed",
